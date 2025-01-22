@@ -56,8 +56,23 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/v0/key", post(v0_post_key))
         .with_state(key_platform);
 
+    let shutdown_signal = async move {
+        let terminate = async {
+            tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+                .expect("failed to install signal handler")
+                .recv()
+                .await;
+        };
+        tokio::select! {
+            _ = tokio::signal::ctrl_c() => {}
+            _ = terminate => {}
+        }
+    };
+
     let listener = TcpListener::bind("0.0.0.0:6666").await?;
-    axum::serve(listener, app).await?;
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal)
+        .await?;
 
     Ok(())
 }
