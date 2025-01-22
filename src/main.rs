@@ -8,14 +8,13 @@ use axum::{
     routing::post,
     Json,
 };
-use rand::{rngs::OsRng, Rng};
-// use base64_serde::
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 use tracing::{info, warn};
 use tracing_subscriber::EnvFilter;
 
 mod aws;
+mod encryption_disabled;
 mod k8s;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -117,20 +116,7 @@ async fn v0_post_key(
         KeyPlatform::AwsKms => aws::aws_key(input).await.map_err(|_| Error::Unknown)?,
         KeyPlatform::K8sInsecure => k8s::k8s_key(input).await.map_err(|_| Error::Unknown)?,
         KeyPlatform::DangerEncryptionDisabled => {
-            let key = match &input.version {
-                Some(Hex(version)) => version.clone(),
-                None => {
-                    let mut key: [u8; 32] = [0; 32];
-                    OsRng.fill(key.as_mut_slice());
-                    key.to_vec()
-                }
-            };
-
-            Output {
-                key_id: input.key_id,
-                version: Hex(key.clone()),
-                plaintext: Hex(key),
-            }
+            encryption_disabled::key(input).map_err(|_| Error::Unknown)?
         }
     };
 

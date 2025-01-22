@@ -41,6 +41,7 @@ dependencies = [
  "aws-sdk-kms",
  "axum",
  "hex",
+ "hexhex",
  "k8s-openapi",
  "kube",
  "rand",
@@ -621,6 +622,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
+name = "fallible-iterator"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4443176a9f2c162692bd3d352d745ef9413eec5782a80d8fd6f8a1ac692a07f7"
+
+[[package]]
 name = "fastrand"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -789,6 +796,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "hexhex"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c56592988a798d4df9155ea41f1d83d1e9a3eefd50fb0c31eb861b6c273ed2fc"
+dependencies = [
+ "hexhex_impl",
+ "hexhex_macros",
+]
+
+[[package]]
+name = "hexhex_impl"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1f530c66081961311028f67d22da8e3f739dab6979fc200f199c3ef0fb2e194a"
+dependencies = [
+ "fallible-iterator",
+]
+
+[[package]]
+name = "hexhex_macros"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dd0ae2c93351a14664ef0fa185c434a56783fb83a71b158a3389d594dd391e1f"
+dependencies = [
+ "hexhex_impl",
 ]
 
 [[package]]
